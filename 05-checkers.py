@@ -28,7 +28,7 @@ def main():
 	moves = 0
 
 	# feel free to come up with your own colors. They are in (R,G,B) tuples	
-	red = (224,49,49)
+	red = (219,228,255)
 	black = (33,37,41)
 	board_colors = [(98,80,87),(222,226,230)]
 	board_alternate = [(73,80,87),(222,226,230)]
@@ -73,7 +73,75 @@ def main():
 			if event.type == pygame.MOUSEBUTTONUP:
 				pos = pygame.mouse.get_pos()
 				square = board.get_square(pos)
-
+				if selected:
+						if square.highlighted:
+								for p in pieces:
+										if p.alive and p.selected:
+												p.move(square.col,square.row)
+												p.check_king(rows)
+												for j in jumps:
+														if square.position == j['position']:
+														j['piece'].alive = False
+														jumping = p
+														sq = board.get_squares()
+														jumps = jumping.check_jump(all_pieces,sq)
+														if not len(jumps)
+																jumping = None
+								if jumping is None:
+										move += 1
+				for p in pieces:
+						p.selected = False
+				for s in board.get_squares():
+						s.highlited = False
+				if jumping is not None:
+						jumping.selected = True
+						for j in jumps:
+								for s in sq:
+										if j['position'] == s.position:
+												s.highlighted = True
+						selected = True
+				else:
+						selected = False
+						jumps = []
+		else:
+				for p in pieces:
+						if p.alive and p.position == square.position:
+								p.selected = True
+								possibilites = p.get_possibilities(board.get_squares())
+								for h in possibilities:
+										c = board.get_square_coord(h)
+										if c is not None:
+												add = True
+												for a in all_pieces:
+														if a.alive and a.col == c.col and a.row == c.row:
+																add + False
+												if add:
+														c.highlighted = True
+												else:
+														sq = board.get_squares()
+														jumps = p.check_jump(all_pieces,sq)
+														for j in jumps:
+																for s in sq:
+																		if j['position'] == s.position:
+																				s.highlighted = True
+										selected = True
+		draw_board(board, moves % len(players), all_pieces, pygame.draw, screen)
+		red_count = 0
+		black_count = 0
+		for p in all_pieces:
+				if p.alive:
+						if p.player == 'Red':
+								red_count += 1
+						if p.player == 'Black':
+								black_count += 1
+		if red_count == 0:
+				winner = 'Black'
+				player = False
+		if black_count == 0:
+				winner = 'Red'
+				player = False
+																
+								
 	print(winner + ' won in only ' + str(moves//2) + ' turns! Good job!')
 
 
